@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: portal-service
+  profiles:
+    active: ${profile:dev}
+server:
+  servlet:
+    context-path: /api/portal
+  port: 8097

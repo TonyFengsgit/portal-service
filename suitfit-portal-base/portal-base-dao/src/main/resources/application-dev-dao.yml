@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    dynamic:
+      primary: portal
+      druid:
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 300000
+      datasource:
+        user:
+          username: root
+          password: suitfit12378900
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/suitfit_user?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+          type: com.alibaba.druid.pool.DruidDataSource
+        order:
+          username: root
+          password: suitfit12378900
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/suitfit_order?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+          type: com.alibaba.druid.pool.DruidDataSource
+        base:
+          username: root
+          password: suitfit12378900
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/suitfit_base?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+          type: com.alibaba.druid.pool.DruidDataSource
+        portal:
+          username: root
+          password: suitfit12378900
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/suitfit_portal?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+          type: com.alibaba.druid.pool.DruidDataSource
+

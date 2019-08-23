@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>suitfit-portal</module>
+        <module>suitfit-portal-base</module>
+        <module>suitfit-portal-model</module>
+    </modules>
+    <parent>
+        <groupId>com.suitfit.pom</groupId>
+        <artifactId>suitfit-pom</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>com.suitfit.portal</groupId>
+    <artifactId>portal-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>portal-service</name>
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.suitfit.framework</groupId>
+            <artifactId>suitfit-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.suitfit.framework</groupId>
+                <artifactId>dynamic-datasource</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-controller</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-base-dao</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-base-nosql</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-base-rpc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-base-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-model-entity</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.suitfit.portal</groupId>
+                <artifactId>portal-model-pojo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

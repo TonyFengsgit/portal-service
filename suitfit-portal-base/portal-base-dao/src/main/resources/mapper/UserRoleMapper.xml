@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suitfit.portal.base.dao.mapper.UserRoleMapper">
+    <select id="findByUserId" resultType="com.suitfit.portal.model.entity.Role">
+        select a.* from role a, user_role b where a.id = b.role_id and a.user_id = #{uerId}
+    </select>
+</mapper>
