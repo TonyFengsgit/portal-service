@@ -8,7 +8,6 @@ import com.suitfit.portal.base.service.UserService;
 import com.suitfit.portal.model.entity.Permission;
 import com.suitfit.portal.model.entity.Role;
 import com.suitfit.portal.model.entity.User;
-import com.suitfit.portal.model.entity.UserRole;
 import com.suitfit.portal.model.pojo.auth.AuthUser;
 import com.suitfit.portal.model.pojo.dto.AuthModel;
 import com.suitfit.portal.model.pojo.dto.PermissionModel;
@@ -34,7 +33,7 @@ public class SecurityFactory {
 
     public AuthModel findByUsername(String username) {
         User user = userService.findByName(username);
-        if (user!=null){
+        if (user != null) {
             AuthModel auth = new AuthModel();
             BeanUtils.copyProperties(user, auth);
             List<Role> userRoleList = userRoleService.findByUserId(user.getId());

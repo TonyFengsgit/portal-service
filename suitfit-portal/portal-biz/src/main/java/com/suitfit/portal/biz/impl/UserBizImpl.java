@@ -96,12 +96,12 @@ public class UserBizImpl implements UserBiz {
         return pageVO;
     }
 
-    private IPage<User> getUserFromPage(UserQueryCriteria query, Page initPage){
+    private IPage<User> getUserFromPage(UserQueryCriteria query, Page initPage) {
         IPage<User> userIPage = userService.findByCriteria(query, initPage);
-        if (!ListUtils.isNullOrEmpty(userIPage.getRecords())){
+        if (!ListUtils.isNullOrEmpty(userIPage.getRecords())) {
             userIPage.getRecords().stream().forEach(user -> {
                 Department dept = departmentService.findById(user.getDepartmentId());
-                if (dept!=null){
+                if (dept != null) {
                     user.setDepartmentName(dept.getName());
                 }
             });

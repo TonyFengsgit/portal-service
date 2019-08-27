@@ -53,7 +53,6 @@ public class MybatisConfig {
     }
 
 
-
     @Bean(name = "transactionManager")
     @Primary
     public DataSourceTransactionManager rdsTransactionManager() {

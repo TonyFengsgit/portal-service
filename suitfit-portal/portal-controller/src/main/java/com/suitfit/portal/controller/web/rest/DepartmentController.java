@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -30,7 +29,7 @@ public class DepartmentController {
     @ApiOperation("查询部门")
     @GetMapping(value = "/dept")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT','DEPT_ALL','DEPT_SELECT')")
-    public ResponseMessage getDepts(DeptQueryCriteria criteria){
+    public ResponseMessage getDepts(DeptQueryCriteria criteria) {
         // 数据权限
         Collection<DeptVO> deptList = departmentBiz.getDepts(criteria);
         return ResponseMessage.ok(deptList);
@@ -39,7 +38,7 @@ public class DepartmentController {
     @ApiOperation("新增部门")
     @PostMapping(value = "/dept")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_CREATE')")
-    public ResponseMessage create(@Validated @RequestBody DeptReq req){
+    public ResponseMessage create(@Validated @RequestBody DeptReq req) {
         departmentBiz.create(req);
         return ResponseMessage.ok();
     }
@@ -47,7 +46,7 @@ public class DepartmentController {
     @ApiOperation("修改部门")
     @PutMapping(value = "/dept")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_EDIT')")
-    public ResponseMessage update(@Validated @RequestBody DeptReq req){
+    public ResponseMessage update(@Validated @RequestBody DeptReq req) {
         departmentBiz.update(req);
         return ResponseMessage.ok();
     }
@@ -55,7 +54,7 @@ public class DepartmentController {
     @ApiOperation("删除部门")
     @DeleteMapping(value = "/dept/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_DELETE')")
-    public ResponseMessage delete(@PathVariable Long id){
+    public ResponseMessage delete(@PathVariable Long id) {
         departmentBiz.delete(id);
         return ResponseMessage.ok();
     }

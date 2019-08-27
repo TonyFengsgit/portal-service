@@ -45,7 +45,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         if (criteria.getState() != null) {
             query.eq(User::getState, criteria.getState());
         }
-        if (criteria.getDeptIds()!=null){
+        if (criteria.getDeptIds() != null) {
             query.in(User::getDepartmentId, criteria.getDeptIds());
         }
         return page(initPage, query);

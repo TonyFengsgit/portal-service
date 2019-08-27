@@ -3,7 +3,6 @@ package com.suitfit.portal.base.service;
 import com.suitfit.framework.service.BaseService;
 import com.suitfit.portal.model.entity.Department;
 import com.suitfit.portal.model.pojo.criteria.DeptQueryCriteria;
-import com.suitfit.portal.model.pojo.vo.req.DeptReq;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

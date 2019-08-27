@@ -14,9 +14,9 @@ public class UserVO {
     private String departmentName;
 
     public String getNickName() {
-        if (StringUtils.isNullOrEmpty(nickName)){
+        if (StringUtils.isNullOrEmpty(nickName)) {
             return userName;
-        }else{
+        } else {
             return nickName;
         }
     }

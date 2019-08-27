@@ -6,7 +6,6 @@ import com.suitfit.portal.controller.security.filter.ImageValidateFilter;
 import com.suitfit.portal.controller.security.filter.JWTAuthenticationFilter;
 import com.suitfit.portal.controller.security.handler.AuthenticationFailHandler;
 import com.suitfit.portal.controller.security.handler.AuthenticationSuccessHandler;
-import com.suitfit.portal.controller.security.handler.DefaultAuthenticationEntryPoint;
 import com.suitfit.portal.controller.security.handler.RestAccessDeniedHandler;
 import com.suitfit.portal.model.pojo.properties.CaptchaProperties;
 import com.suitfit.portal.model.pojo.properties.IgnoredUrlsProperties;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -116,7 +114,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //            //  .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
 //            .addFilterBefore(new ImageValidateFilter(captchaProperties, redisTemplate), UsernamePasswordAuthenticationFilter.class)
 //            .addFilter(new JWTAuthenticationFilter(authenticationManager, tokenProperties, redisTemplate, securityFactory));
-        String []patterns = ignoredUrlsProperties.getPath().toArray(new String[0]);
+        String[] patterns = ignoredUrlsProperties.getPath().toArray(new String[0]);
         http.csrf().disable()
                 .authorizeRequests().antMatchers(patterns).permitAll()
                 .anyRequest().authenticated()
@@ -128,7 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling().accessDeniedHandler(new RestAccessDeniedHandler())// PS:因为framework中已经对AccessDeniedException异常做了处理，此处不生效
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new ImageValidateFilter(captchaProperties, redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager, tokenProperties, redisTemplate,securityFactory));
+                .addFilter(new JWTAuthenticationFilter(authenticationManager, tokenProperties, redisTemplate, securityFactory));
 
     }
 }

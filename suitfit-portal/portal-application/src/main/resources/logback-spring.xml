@@ -79,7 +79,7 @@
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-<!--        <appender-ref ref="FILE"/>-->
+        <!--        <appender-ref ref="FILE"/>-->
         <!--        <appender-ref ref="LOGSTASH"/>-->
     </root>
 </configuration>

@@ -5,7 +5,6 @@ import com.suitfit.portal.model.pojo.vo.req.DeptReq;
 import com.suitfit.portal.model.pojo.vo.resp.DeptVO;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface DepartmentBiz {
     Collection<DeptVO> getDepts(DeptQueryCriteria criteria);

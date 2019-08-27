@@ -28,14 +28,14 @@ public class DepartmentBizImpl implements DepartmentBiz {
     @Override
     public Collection<DeptVO> getDepts(DeptQueryCriteria criteria) {
         criteria.setIds(dataScope.getDeptIds());
-        List<Department> entityList= departmentService.findByCriteria(criteria);
+        List<Department> entityList = departmentService.findByCriteria(criteria);
         List<DeptVO> deptVOList = (List<DeptVO>) BeanUtils.convert(entityList, DeptVO.class);
         return buildTree(deptVOList);
     }
 
     private Collection<DeptVO> buildTree(List<DeptVO> deptDTOS) {
         Set<DeptVO> trees = new LinkedHashSet<>();
-        Set<DeptVO> depts= new LinkedHashSet<>();
+        Set<DeptVO> depts = new LinkedHashSet<>();
         List<String> deptNames = deptDTOS.stream().map(DeptVO::getName).collect(Collectors.toList());
         Boolean isChild;
         for (DeptVO deptDTO : deptDTOS) {
@@ -52,18 +52,18 @@ public class DepartmentBizImpl implements DepartmentBiz {
                     deptDTO.getChildren().add(it);
                 }
             }
-            if(isChild)
+            if (isChild)
                 depts.add(deptDTO);
-            else if(!deptNames.contains(departmentService.findNameById(deptDTO.getParentId())))
+            else if (!deptNames.contains(departmentService.findNameById(deptDTO.getParentId())))
                 depts.add(deptDTO);
         }
 
         if (CollectionUtils.isEmpty(trees)) {
             trees = depts;
         }
-        if (CollectionUtils.isEmpty(trees)){
+        if (CollectionUtils.isEmpty(trees)) {
             return deptDTOS;
-        }else{
+        } else {
             return trees;
         }
     }
@@ -78,11 +78,11 @@ public class DepartmentBizImpl implements DepartmentBiz {
 
     @Override
     public void update(DeptReq req) {
-        if (req.getParentId().equals(req.getId())){
+        if (req.getParentId().equals(req.getId())) {
             throw new BaseException("上级不能为自己");
         }
         Department dept = departmentService.findById(req.getId());
-        if (dept!=null){
+        if (dept != null) {
             Department entity = new Department();
             BeanUtils.copyProperties(entity, req);
             departmentService.updateEntity(entity);

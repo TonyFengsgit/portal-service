@@ -37,7 +37,7 @@ public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, Dep
     @Override
     public List<Department> findByCriteria(DeptQueryCriteria criteria) {
         LambdaQueryWrapper<Department> query = new LambdaQueryWrapper<>();
-        if (!StringUtils.isNullOrEmpty(criteria.getName())){
+        if (!StringUtils.isNullOrEmpty(criteria.getName())) {
             query.eq(Department::getName, criteria.getName());
         }
         return this.list(query);
@@ -48,9 +48,9 @@ public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, Dep
         QueryWrapper<Department> query = new QueryWrapper<>();
         query.lambda().eq(Department::getParentId, parentId);
         Department entity = this.getOne(query);
-        if (entity==null){
+        if (entity == null) {
             return null;
-        }else{
+        } else {
             return entity.getName();
         }
     }

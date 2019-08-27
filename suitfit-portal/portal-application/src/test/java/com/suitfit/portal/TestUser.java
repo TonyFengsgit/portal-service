@@ -18,7 +18,7 @@ public class TestUser extends BaseTest {
     private RoleService roleService;
 
     @Test
-    public void testCreate(){
+    public void testCreate() {
         UserReq userReq = new UserReq();
         userReq.setUserName("test");
         userReq.setPhone("12345678900");
