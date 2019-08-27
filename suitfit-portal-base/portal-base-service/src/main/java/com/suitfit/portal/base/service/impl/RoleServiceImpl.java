@@ -11,6 +11,7 @@ import com.suitfit.portal.model.entity.Role;
 import com.suitfit.portal.model.pojo.criteria.QueryCriteria;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -73,7 +74,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implement
     }
 
     @Override
-    public List<Role> findByRoleIds(List<Long> roles) {
+    public List<Role> findByRoleIds(Collection<Long> roles) {
         LambdaQueryWrapper<Role> query = new LambdaQueryWrapper<>();
         query.in(Role::getId, roles);
         return list(query);

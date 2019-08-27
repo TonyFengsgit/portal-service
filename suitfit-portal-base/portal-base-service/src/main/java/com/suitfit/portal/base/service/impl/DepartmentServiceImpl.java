@@ -1,10 +1,13 @@
 package com.suitfit.portal.base.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.suitfit.framework.service.impl.BaseServiceImpl;
+import com.suitfit.framework.utils.StringUtils;
 import com.suitfit.portal.base.dao.mapper.DepartmentMapper;
 import com.suitfit.portal.base.service.DepartmentService;
 import com.suitfit.portal.model.entity.Department;
+import com.suitfit.portal.model.pojo.criteria.DeptQueryCriteria;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,5 +27,41 @@ public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, Dep
         QueryWrapper<Department> query = new QueryWrapper<>();
         query.lambda().eq(Department::getParentId, id);
         return list(query);
+    }
+
+    @Override
+    public Department findById(Long departmentId) {
+        return this.getById(departmentId);
+    }
+
+    @Override
+    public List<Department> findByCriteria(DeptQueryCriteria criteria) {
+        LambdaQueryWrapper<Department> query = new LambdaQueryWrapper<>();
+        if (!StringUtils.isNullOrEmpty(criteria.getName())){
+            query.eq(Department::getName, criteria.getName());
+        }
+        return this.list(query);
+    }
+
+    @Override
+    public String findNameById(Long parentId) {
+        QueryWrapper<Department> query = new QueryWrapper<>();
+        query.lambda().eq(Department::getParentId, parentId);
+        Department entity = this.getOne(query);
+        if (entity==null){
+            return null;
+        }else{
+            return entity.getName();
+        }
+    }
+
+    @Override
+    public void updateEntity(Department entity) {
+        this.updateById(entity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        this.removeById(id);
     }
 }

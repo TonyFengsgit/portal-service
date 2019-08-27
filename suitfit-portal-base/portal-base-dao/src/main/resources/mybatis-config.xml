@@ -6,7 +6,7 @@
         <!--显示sql日志-->
         <setting name="logPrefix" value="com.apache.ibatis"/>
         <!-- 打印查询语句 -->
-        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <setting name="logImpl" value="org.apache.ibatis.logging.stdout.StdOutImpl"/>
         <setting name="cacheEnabled" value="true"/>
         <!-- 延迟加载的全局开关。默认值：false -->
         <setting name="lazyLoadingEnabled" value="false"/>

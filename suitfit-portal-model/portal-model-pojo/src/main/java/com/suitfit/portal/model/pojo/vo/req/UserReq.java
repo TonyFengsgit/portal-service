@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class UserReq {
@@ -23,9 +24,9 @@ public class UserReq {
     private String email;
 
     @NotNull
-    private String state;
+    private Integer state;
 
     private Long departmentId;
 
-    private List<Long> roles;
+    private Set<Long> roles;
 }

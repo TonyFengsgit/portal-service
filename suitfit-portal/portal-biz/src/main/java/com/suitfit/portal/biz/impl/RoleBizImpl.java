@@ -65,6 +65,7 @@ public class RoleBizImpl implements RoleBiz {
     @Override
     public PageVO<RoleVO> getRoles(RoleReq req, Page initPage) {
         QueryCriteria criteria = new QueryCriteria();
+        BeanUtils.copyProperties(req, criteria);
         IPage<Role> roleIPage = roleService.findByCriteria(criteria, initPage);
         PageVO<RoleVO> rolePage = PageUtils.fromIpage(roleIPage, RoleVO.class);
         return rolePage;
@@ -79,6 +80,7 @@ public class RoleBizImpl implements RoleBiz {
 
     @Override
     public void create(RoleReq req) {
+        req.setId(null);
         if (roleService.findByName(req.getName()) != null) {
             throw new BaseException("角色已经存在");
         }

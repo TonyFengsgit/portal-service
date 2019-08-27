@@ -78,6 +78,7 @@ public class PermissionBizImpl implements PermissionBiz {
 
     @Override
     public void create(PermissionReq req) {
+        req.setId(null);
         if (permissionService.findByName(req.getName()) != null) {
             throw new BaseException(ResponseCode.PERMISSION_EXISTS);
         }

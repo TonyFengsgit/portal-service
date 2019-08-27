@@ -28,7 +28,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @create: 2019-08-16 11:46
  */
 @Slf4j
-@EnableCaching
+//@EnableCaching
 @Configuration
 public class RedisCacheConfig extends CachingConfigurerSupport {
     /**

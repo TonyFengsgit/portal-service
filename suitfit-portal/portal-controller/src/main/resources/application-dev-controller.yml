@@ -20,14 +20,15 @@ portal:
   captcha:
     # 图片验证码验证
     filters:
-      - /api/portal/auth/login # 登录接口
+      - /api/portal/login # 登录接口
       - /api/portal/auth/register
   # 忽略鉴权url
   ignored:
     urls:
       - /captcha/init
-      - /auth/register
       - /**/*.js
       - /**/*.css
       - /**/*.png
       - /**/*.ico
+
+

@@ -9,7 +9,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @program: RoleService
@@ -41,5 +43,5 @@ public interface RoleService extends BaseService<Role> {
     @CacheEvict(allEntries = true)
     void deleteById(Long id);
 
-    List<Role> findByRoleIds(List<Long> roles);
+    List<Role> findByRoleIds(Collection<Long> roles);
 }

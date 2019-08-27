@@ -1,5 +1,6 @@
 package com.suitfit.portal.base.dao.config;
 
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.suitfit.framework.dao.SqlCostInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
@@ -39,7 +40,7 @@ public class MybatisConfig {
         bean.setDataSource(dataSource);
         bean.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
-        bean.setPlugins(new Interceptor[]{new SqlCostInterceptor()});
+        bean.setPlugins(new Interceptor[]{new SqlCostInterceptor(), new PaginationInterceptor()});
 
         return bean.getObject();
     }
@@ -50,6 +51,7 @@ public class MybatisConfig {
             @Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
+
 
 
     @Bean(name = "transactionManager")

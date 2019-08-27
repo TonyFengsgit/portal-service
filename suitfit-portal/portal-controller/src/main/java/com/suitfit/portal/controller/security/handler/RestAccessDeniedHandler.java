@@ -16,16 +16,18 @@ import java.io.IOException;
 
 /**
  * 403无权限
+ * 因为在framework中已经添加了统一权限处理，这里的处理不会生效!!!!
  *
  * @author Exrickx
  */
 @Slf4j
-@Component
+@Deprecated
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
+
         ResponseUtils.out(response, new BaseException(ResponseCode.PERMISSION_ERROR));
     }
 

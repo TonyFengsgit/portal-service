@@ -83,6 +83,7 @@ public class MenuBizImpl implements MenuBiz {
 
     @Override
     public void create(MenuReq req) {
+        req.setId(null);
         if (menuService.findByName(req.getName()) != null) {
             throw new BaseException("");
         }

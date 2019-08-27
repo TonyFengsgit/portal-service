@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.suitfit.framework.service.impl.BaseServiceImpl;
 import com.suitfit.portal.base.dao.mapper.RolePermissionMapper;
 import com.suitfit.portal.base.service.RolePermissionService;
+import com.suitfit.portal.model.entity.Permission;
 import com.suitfit.portal.model.entity.RolePermission;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,10 @@ public class RolePermissionServiceImpl extends BaseServiceImpl<RolePermissionMap
         QueryWrapper<RolePermission> query = new QueryWrapper<>();
         query.lambda().eq(RolePermission::getPermissionId, id);
         return this.list(query);
+    }
+
+    @Override
+    public List<Permission> findByRoleId(Long roleId) {
+        return this.baseMapper.findByRoleId(roleId);
     }
 }

@@ -26,7 +26,7 @@ public class AuthUser implements UserDetails {
 
     public AuthUser(AuthModel user) {
         this.id = user.getId();
-        this.username = user.getUsername();
+        this.username = user.getUserName();
         this.password = user.getPassword();
         this.state = user.getState();
         this.roles = user.getRoles();

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.suitfit.portal.base.dao.mapper.RolePermissionMapper">
-
+    <select id="findByRoleId" resultType="com.suitfit.portal.model.entity.Permission">
+        select a.* from permission a , role_permission b where a.id = b.permission_id and b.role_id = #{roleId}
+    </select>
 </mapper>

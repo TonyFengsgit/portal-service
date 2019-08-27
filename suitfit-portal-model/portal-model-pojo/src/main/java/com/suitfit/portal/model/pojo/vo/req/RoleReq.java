@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class RoleReq {
@@ -26,8 +27,8 @@ public class RoleReq {
 
     private Integer level = 1;
 
-    private List<Long> menus;
+    private Set<Long> menus;
 
-    private List<Long> permissions;
+    private Set<Long> permissions;
 
 }

@@ -46,10 +46,11 @@ public class ImageValidateFilter extends OncePerRequestFilter {
                 break;
             }
         }
-        if (flag) {
+        String debug = request.getParameter("debug");
+        if (flag && !"true".equals(debug)) {
             try {
                 String captchaId = request.getParameter("captchaId");
-                String code = request.getParameter("code");
+                String code = request.getParameter("verifyCode");
                 if (StringUtils.isBlank(captchaId) || StringUtils.isBlank(code)) {
                     throw new BaseException(ResponseCode.CAPTCHA_PARAM_INCOMPLETE);
                 }

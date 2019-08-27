@@ -15,6 +15,7 @@ import com.suitfit.portal.base.service.UserService;
 import com.suitfit.portal.base.service.utils.DataScope;
 import com.suitfit.portal.base.service.utils.SecurityFactory;
 import com.suitfit.portal.biz.UserBiz;
+import com.suitfit.portal.model.entity.Department;
 import com.suitfit.portal.model.entity.Role;
 import com.suitfit.portal.model.entity.User;
 import com.suitfit.portal.model.entity.UserRole;
@@ -26,11 +27,11 @@ import com.suitfit.portal.model.pojo.vo.common.PageVO;
 import com.suitfit.portal.model.pojo.vo.req.UserPassReq;
 import com.suitfit.portal.model.pojo.vo.req.UserReq;
 import com.suitfit.portal.model.pojo.vo.resp.UserVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
@@ -82,22 +83,36 @@ public class UserBizImpl implements UserBiz {
             // 若无交集，则代表无数据权限
             query.setDeptIds(result);
             if (result.size() != 0) {
-                IPage<User> userIPage = userService.findByCriteria(query, initPage);
+                IPage<User> userIPage = getUserFromPage(query, initPage);
                 pageVO = PageUtils.fromIpage(userIPage, UserVO.class);
             }
         } else {
             result.addAll(deptSet);
             result.addAll(deptIds);
             query.setDeptIds(result);
-            IPage<User> userIPage = userService.findByCriteria(query, initPage);
+            IPage<User> userIPage = getUserFromPage(query, initPage);
             pageVO = PageUtils.fromIpage(userIPage, UserVO.class);
         }
         return pageVO;
     }
 
+    private IPage<User> getUserFromPage(UserQueryCriteria query, Page initPage){
+        IPage<User> userIPage = userService.findByCriteria(query, initPage);
+        if (!ListUtils.isNullOrEmpty(userIPage.getRecords())){
+            userIPage.getRecords().stream().forEach(user -> {
+                Department dept = departmentService.findById(user.getDepartmentId());
+                if (dept!=null){
+                    user.setDepartmentName(dept.getName());
+                }
+            });
+        }
+        return userIPage;
+    }
+
     @Transactional
     @Override
     public void create(UserReq query) {
+        query.setId(null);
         //checkLevel(query);
         if (userService.findByName(query.getUserName()) != null) {
             throw new BaseException(ResponseCode.USER_NAME_EXISTS);
@@ -117,7 +132,7 @@ public class UserBizImpl implements UserBiz {
         userService.save(entity);
 
         List<Long> roles = new ArrayList<>();
-        if (ListUtils.isNullOrEmpty(query.getRoles())) {
+        if (CollectionUtils.isEmpty(query.getRoles())) {
             roles.add(roleService.getDefaultRole().getId());
         } else {
             roles.addAll(query.getRoles());
@@ -150,7 +165,7 @@ public class UserBizImpl implements UserBiz {
         entity.setPassword(null);
         userService.updateEntity(entity);
 
-        if (!ListUtils.isNullOrEmpty(req.getRoles())) {
+        if (!CollectionUtils.isEmpty(req.getRoles())) {
             userRoleService.removeByUserId(req.getId());
             for (Long roleId : req.getRoles()) {
                 UserRole userRole = new UserRole();
