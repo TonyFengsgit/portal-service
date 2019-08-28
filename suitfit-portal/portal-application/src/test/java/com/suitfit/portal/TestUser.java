@@ -6,8 +6,8 @@ import com.suitfit.portal.model.pojo.vo.req.UserReq;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TestUser extends BaseTest {
 
@@ -24,7 +24,7 @@ public class TestUser extends BaseTest {
         userReq.setPhone("12345678900");
         userReq.setEmail("admin@admin.com");
         userReq.setDepartmentId(0L);
-        List<Long> roles = new ArrayList<>();
+        Set<Long> roles = new HashSet<>();
         roles.add(1L);
         userReq.setRoles(roles);
         userBiz.create(userReq);

@@ -2,6 +2,7 @@ package com.suitfit.portal.controller.security.handler;
 
 import com.suitfit.framework.utils.redis.RedisService;
 import com.suitfit.framework.utils.servlet.ResponseUtils;
+import com.suitfit.portal.model.pojo.properties.TokenProperties;
 import com.suitfit.portal.model.pojo.utils.JwtTokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,14 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
     @Autowired
     private RedisService redisTemplate;
 
+    @Autowired
+    private TokenProperties tokenProperties;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = JwtTokenUtils.generateToken(userDetails.getUsername());
-        redisTemplate.set(token, "true", 30, TimeUnit.DAYS);
+        redisTemplate.set(token, "true", tokenProperties.getTokenExpireTime(), TimeUnit.DAYS);
         remove(userDetails.getUsername());
         ResponseUtils.out(response, token);
     }

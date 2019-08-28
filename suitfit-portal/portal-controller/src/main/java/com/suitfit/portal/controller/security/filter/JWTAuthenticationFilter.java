@@ -9,7 +9,6 @@ import com.suitfit.portal.model.pojo.auth.AuthUser;
 import com.suitfit.portal.model.pojo.code.ResponseCode;
 import com.suitfit.portal.model.pojo.consts.SecurityConstant;
 import com.suitfit.portal.model.pojo.dto.AuthModel;
-import com.suitfit.portal.model.pojo.properties.TokenProperties;
 import com.suitfit.portal.model.pojo.utils.JwtTokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,15 +29,13 @@ import java.io.IOException;
 @Slf4j
 public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
-    private TokenProperties tokenProperties;
 
     private RedisService redisTemplate;
 
     private SecurityFactory securityFactory;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, TokenProperties tokenProperties, RedisService redisTemplate, SecurityFactory securityFactory) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, RedisService redisTemplate, SecurityFactory securityFactory) {
         super(authenticationManager);
-        this.tokenProperties = tokenProperties;
         this.redisTemplate = redisTemplate;
         this.securityFactory = securityFactory;
     }

@@ -3,7 +3,6 @@ package com.suitfit.portal.model.pojo.vo.req;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class MenuReq {
@@ -13,7 +12,6 @@ public class MenuReq {
     @NotBlank
     private String name;
 
-    @NotNull
     private Integer sort;
 
     private String path;

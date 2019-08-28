@@ -20,14 +20,14 @@ import java.util.Collection;
  */
 @Slf4j
 @RestController
-@RequestMapping("department")
+@RequestMapping("dept")
 public class DepartmentController {
 
     @Autowired
     private DepartmentBiz departmentBiz;
 
     @ApiOperation("查询部门")
-    @GetMapping(value = "/dept")
+    @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT','DEPT_ALL','DEPT_SELECT')")
     public ResponseMessage getDepts(DeptQueryCriteria criteria) {
         // 数据权限
@@ -36,7 +36,7 @@ public class DepartmentController {
     }
 
     @ApiOperation("新增部门")
-    @PostMapping(value = "/dept")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_CREATE')")
     public ResponseMessage create(@Validated @RequestBody DeptReq req) {
         departmentBiz.create(req);
@@ -44,7 +44,7 @@ public class DepartmentController {
     }
 
     @ApiOperation("修改部门")
-    @PutMapping(value = "/dept")
+    @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_EDIT')")
     public ResponseMessage update(@Validated @RequestBody DeptReq req) {
         departmentBiz.update(req);
@@ -52,7 +52,7 @@ public class DepartmentController {
     }
 
     @ApiOperation("删除部门")
-    @DeleteMapping(value = "/dept/{id}")
+    @DeleteMapping(value = "{id}")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_DELETE')")
     public ResponseMessage delete(@PathVariable Long id) {
         departmentBiz.delete(id);

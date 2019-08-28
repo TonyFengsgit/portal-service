@@ -59,9 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationFailHandler failHandler;
 
-//    @Autowired
-//    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
-
     @Autowired
     private RedisService redisTemplate;
 
@@ -97,23 +94,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//            .formLogin().loginProcessingUrl("/auth/login")
-//                .loginPage("/api/portal/auth/needLogin").permitAll()
-//            .successHandler(successHandler)
-//            .failureHandler(failHandler)
-//            .and()//禁用csrf和session
-//            .csrf().disable()
-//            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//            .and()// 其他的需要认证访问
-//            .authorizeRequests()
-//            .anyRequest().authenticated()
-//            .and()//权限拒绝处理
-//            .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-//            .and()//增加了过滤器
-//            //  .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
-//            .addFilterBefore(new ImageValidateFilter(captchaProperties, redisTemplate), UsernamePasswordAuthenticationFilter.class)
-//            .addFilter(new JWTAuthenticationFilter(authenticationManager, tokenProperties, redisTemplate, securityFactory));
         String[] patterns = ignoredUrlsProperties.getPath().toArray(new String[0]);
         http.csrf().disable()
                 .authorizeRequests().antMatchers(patterns).permitAll()
@@ -126,7 +106,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling().accessDeniedHandler(new RestAccessDeniedHandler())// PS:因为framework中已经对AccessDeniedException异常做了处理，此处不生效
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new ImageValidateFilter(captchaProperties, redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager, tokenProperties, redisTemplate, securityFactory));
+                .addFilter(new JWTAuthenticationFilter(authenticationManager, redisTemplate, securityFactory));
 
     }
 }
