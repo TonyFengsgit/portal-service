@@ -19,7 +19,7 @@ public class RoleReq {
     private Boolean defaultRole = false;
 
     @ApiModelProperty(value = "数据权限类型 0全部默认 1.当前 2.自定义")
-    private Integer dataType = 2;
+    private Integer dataType = 0;
 
     @ApiModelProperty(value = "备注")
     private String description;
@@ -29,5 +29,7 @@ public class RoleReq {
     private Set<Long> menus;
 
     private Set<Long> permissions;
+
+    private Set<Long> depts;
 
 }

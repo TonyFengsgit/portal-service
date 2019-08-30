@@ -3,6 +3,8 @@ package com.suitfit.portal.model.pojo.vo.resp;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class RoleVO {
 
@@ -21,4 +23,8 @@ public class RoleVO {
     private String description;
 
     private Integer level;
+
+    private List<PermissionVO> permissions;
+
+    private List<MenuVO> menus;
 }

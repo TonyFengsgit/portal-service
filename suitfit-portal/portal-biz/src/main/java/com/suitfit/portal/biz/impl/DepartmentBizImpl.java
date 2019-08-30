@@ -38,24 +38,26 @@ public class DepartmentBizImpl implements DepartmentBiz {
         Set<DeptVO> depts = new LinkedHashSet<>();
         List<String> deptNames = deptDTOS.stream().map(DeptVO::getName).collect(Collectors.toList());
         Boolean isChild;
-        for (DeptVO deptDTO : deptDTOS) {
-            isChild = false;
-            if ("0".equals(deptDTO.getParentId().toString())) {
-                trees.add(deptDTO);
-            }
-            for (DeptVO it : deptDTOS) {
-                if (it.getParentId().equals(deptDTO.getId())) {
-                    isChild = true;
-                    if (deptDTO.getChildren() == null) {
-                        deptDTO.setChildren(new ArrayList<DeptVO>());
-                    }
-                    deptDTO.getChildren().add(it);
+        if (deptDTOS!=null) {
+            for (DeptVO deptDTO : deptDTOS) {
+                isChild = false;
+                if ("0".equals(deptDTO.getParentId().toString())) {
+                    trees.add(deptDTO);
                 }
+                for (DeptVO it : deptDTOS) {
+                    if (it.getParentId().equals(deptDTO.getId())) {
+                        isChild = true;
+                        if (deptDTO.getChildren() == null) {
+                            deptDTO.setChildren(new ArrayList<DeptVO>());
+                        }
+                        deptDTO.getChildren().add(it);
+                    }
+                }
+                if (isChild)
+                    depts.add(deptDTO);
+                else if (!deptNames.contains(departmentService.findNameById(deptDTO.getParentId())))
+                    depts.add(deptDTO);
             }
-            if (isChild)
-                depts.add(deptDTO);
-            else if (!deptNames.contains(departmentService.findNameById(deptDTO.getParentId())))
-                depts.add(deptDTO);
         }
 
         if (CollectionUtils.isEmpty(trees)) {
@@ -84,7 +86,8 @@ public class DepartmentBizImpl implements DepartmentBiz {
         Department dept = departmentService.findById(req.getId());
         if (dept != null) {
             Department entity = new Department();
-            BeanUtils.copyProperties(entity, req);
+            BeanUtils.copyProperties(req, entity);
+            entity.setId(dept.getId());
             departmentService.updateEntity(entity);
         }
     }

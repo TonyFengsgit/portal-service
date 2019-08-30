@@ -3,6 +3,7 @@ package com.suitfit.portal.model.pojo.vo.resp;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,4 +23,5 @@ public class PermissionVO {
     private Integer sort;
 
     private List<PermissionVO> children;
+
 }

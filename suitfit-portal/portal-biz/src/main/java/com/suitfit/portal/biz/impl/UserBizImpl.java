@@ -26,6 +26,7 @@ import com.suitfit.portal.model.pojo.criteria.UserQueryCriteria;
 import com.suitfit.portal.model.pojo.vo.common.PageVO;
 import com.suitfit.portal.model.pojo.vo.req.UserPassReq;
 import com.suitfit.portal.model.pojo.vo.req.UserReq;
+import com.suitfit.portal.model.pojo.vo.resp.RoleVO;
 import com.suitfit.portal.model.pojo.vo.resp.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,30 +84,32 @@ public class UserBizImpl implements UserBiz {
             // 若无交集，则代表无数据权限
             query.setDeptIds(result);
             if (result.size() != 0) {
-                IPage<User> userIPage = getUserFromPage(query, initPage);
-                pageVO = PageUtils.fromIpage(userIPage, UserVO.class);
+                pageVO = getUserFromPage(query, initPage);
             }
         } else {
             result.addAll(deptSet);
             result.addAll(deptIds);
             query.setDeptIds(result);
-            IPage<User> userIPage = getUserFromPage(query, initPage);
-            pageVO = PageUtils.fromIpage(userIPage, UserVO.class);
+            pageVO = getUserFromPage(query, initPage);
         }
         return pageVO;
     }
 
-    private IPage<User> getUserFromPage(UserQueryCriteria query, Page initPage) {
+    private PageVO<UserVO> getUserFromPage(UserQueryCriteria query, Page initPage) {
         IPage<User> userIPage = userService.findByCriteria(query, initPage);
-        if (!ListUtils.isNullOrEmpty(userIPage.getRecords())) {
-            userIPage.getRecords().stream().forEach(user -> {
+        PageVO<UserVO> pageVO = PageUtils.fromIpage(userIPage, UserVO.class);
+        if (!ListUtils.isNullOrEmpty(pageVO.getRecords())) {
+            pageVO.getRecords().stream().forEach(user -> {
                 Department dept = departmentService.findById(user.getDepartmentId());
                 if (dept != null) {
                     user.setDepartmentName(dept.getName());
                 }
+                List<Role> roleEntityList = userRoleService.findByUserId(user.getId());
+                List<RoleVO> roles = (List<RoleVO>) BeanUtils.convert(roleEntityList, RoleVO.class);
+                user.setRoles(roles);
             });
         }
-        return userIPage;
+        return pageVO;
     }
 
     @Transactional

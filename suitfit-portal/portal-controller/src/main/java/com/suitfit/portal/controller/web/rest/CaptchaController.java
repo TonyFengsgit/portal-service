@@ -1,6 +1,8 @@
 package com.suitfit.portal.controller.web.rest;
 
+import cn.hutool.core.codec.Base64;
 import com.suitfit.framework.annotation.Log;
+import com.suitfit.framework.mvc.ResponseMessage;
 import com.suitfit.framework.utils.captcha.CaptchaUtils;
 import com.suitfit.framework.utils.redis.RedisService;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -26,15 +29,16 @@ public class CaptchaController {
 
     @RequestMapping(value = "init", method = RequestMethod.GET)
     @ApiOperation(value = "根据验证码ID获取图片")
-    public void drawCaptcha(@Log(ignore = true) HttpServletResponse response) throws IOException {
+    public ResponseMessage drawCaptcha(@Log(ignore = true) HttpServletResponse response) throws IOException {
         //得到验证码 生成指定验证码
         String captchaId = UUID.randomUUID().toString().replace("-", "");
         String code = new CaptchaUtils().randomStr(4);
         // 缓存验证码
         redisTemplate.set(captchaId, code, 10L, TimeUnit.MINUTES);
         CaptchaUtils vCode = new CaptchaUtils(116, 36, 4, 10, code);
-        response.setContentType("image/png");
         response.addHeader("captchaId", captchaId);
-        vCode.write(response.getOutputStream());
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        vCode.write(stream);
+        return ResponseMessage.ok(Base64.encode(stream.toByteArray()));
     }
 }

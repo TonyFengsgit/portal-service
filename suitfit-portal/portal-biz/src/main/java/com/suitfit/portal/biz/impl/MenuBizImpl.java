@@ -39,7 +39,6 @@ public class MenuBizImpl implements MenuBiz {
 
     @Override
     public List<MenuVO> init() {
-
         Long userId = securityFactory.getUserId();
         List<Role> roles = userRoleService.findByUserId(userId);
         List<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toList());
@@ -181,16 +180,18 @@ public class MenuBizImpl implements MenuBiz {
 
     private List<MenuDTO> buildTree(List<MenuDTO> voList) {
         List<MenuDTO> trees = new ArrayList<>();
-        for (MenuDTO menuDTO : voList) {
-            if ("0".equals(menuDTO.getParentId().toString())) {
-                trees.add(menuDTO);
-            }
-            for (MenuDTO it : voList) {
-                if (it.getParentId().equals(menuDTO.getId())) {
-                    if (menuDTO.getChildren() == null) {
-                        menuDTO.setChildren(new ArrayList<MenuDTO>());
+        if (voList!=null) {
+            for (MenuDTO menuDTO : voList) {
+                if ("0".equals(menuDTO.getParentId().toString())) {
+                    trees.add(menuDTO);
+                }
+                for (MenuDTO it : voList) {
+                    if (it.getParentId().equals(menuDTO.getId())) {
+                        if (menuDTO.getChildren() == null) {
+                            menuDTO.setChildren(new ArrayList<MenuDTO>());
+                        }
+                        menuDTO.getChildren().add(it);
                     }
-                    menuDTO.getChildren().add(it);
                 }
             }
         }

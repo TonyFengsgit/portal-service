@@ -29,9 +29,11 @@ public class PermissionBizImpl implements PermissionBiz {
     @Override
     public List<Map<String, Object>> getPermissionTree(List<Permission> parentList) {
         List<Map<String, Object>> list = new LinkedList<>();
-
         if (parentList == null) {
             parentList = permissionService.getByPid(0L);
+        }
+        if (parentList==null){
+            return null;
         }
         parentList.forEach(permission -> {
                     if (permission != null) {
@@ -56,16 +58,18 @@ public class PermissionBizImpl implements PermissionBiz {
         BeanUtils.copyProperties(req, query);
         List<Permission> entityList = permissionService.queryAll(query);
         List<PermissionVO> permissionList = (List<PermissionVO>) BeanUtils.convert(entityList, PermissionVO.class);
-        for (PermissionVO parent : permissionList) {
-            if ("0".equals(parent.getParentId().toString())) {
-                trees.add(parent);
-            }
-            for (PermissionVO it : permissionList) {
-                if (it.getParentId().equals(parent.getId())) {
-                    if (parent.getChildren() == null) {
-                        parent.setChildren(new ArrayList<PermissionVO>());
+        if (permissionList!=null){
+            for (PermissionVO parent : permissionList) {
+                if ("0".equals(parent.getParentId().toString())) {
+                    trees.add(parent);
+                }
+                for (PermissionVO it : permissionList) {
+                    if (it.getParentId().equals(parent.getId())) {
+                        if (parent.getChildren() == null) {
+                            parent.setChildren(new ArrayList<PermissionVO>());
+                        }
+                        parent.getChildren().add(it);
                     }
-                    parent.getChildren().add(it);
                 }
             }
         }

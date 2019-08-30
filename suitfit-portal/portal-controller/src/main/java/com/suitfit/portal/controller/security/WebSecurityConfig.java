@@ -103,6 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login").permitAll()
                 .successHandler(successHandler)
                 .failureHandler(failHandler)
+                .and().cors()
                 .and().exceptionHandling().accessDeniedHandler(new RestAccessDeniedHandler())// PS:因为framework中已经对AccessDeniedException异常做了处理，此处不生效
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new ImageValidateFilter(captchaProperties, redisTemplate), UsernamePasswordAuthenticationFilter.class)

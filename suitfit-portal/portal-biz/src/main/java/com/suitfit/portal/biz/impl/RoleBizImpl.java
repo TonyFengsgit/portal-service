@@ -2,6 +2,7 @@ package com.suitfit.portal.biz.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.suitfit.framework.exception.BaseException;
 import com.suitfit.framework.utils.ListUtils;
 import com.suitfit.framework.utils.bean.BeanUtils;
@@ -9,14 +10,13 @@ import com.suitfit.portal.base.dao.utils.PageUtils;
 import com.suitfit.portal.base.service.*;
 import com.suitfit.portal.base.service.utils.SecurityFactory;
 import com.suitfit.portal.biz.RoleBiz;
-import com.suitfit.portal.model.entity.Role;
-import com.suitfit.portal.model.entity.RoleMenu;
-import com.suitfit.portal.model.entity.RolePermission;
-import com.suitfit.portal.model.entity.UserRole;
+import com.suitfit.portal.model.entity.*;
 import com.suitfit.portal.model.pojo.code.ResponseCode;
 import com.suitfit.portal.model.pojo.criteria.QueryCriteria;
 import com.suitfit.portal.model.pojo.vo.common.PageVO;
 import com.suitfit.portal.model.pojo.vo.req.RoleReq;
+import com.suitfit.portal.model.pojo.vo.resp.MenuVO;
+import com.suitfit.portal.model.pojo.vo.resp.PermissionVO;
 import com.suitfit.portal.model.pojo.vo.resp.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +52,14 @@ public class RoleBizImpl implements RoleBiz {
         Role entity = roleService.get(id);
         RoleVO role = new RoleVO();
         BeanUtils.copyProperties(entity, role);
+        if (entity!=null) {
+            List<Menu> menuEntity = roleMenuService.findByRoleIds(Lists.newArrayList(entity.getId()));
+            List<MenuVO> menus = (List<MenuVO>) BeanUtils.convert(menuEntity, MenuVO.class);
+            List<Permission> permissionList = rolePermissionService.findByRoleId(role.getId());
+            List<PermissionVO> permissions = (List<PermissionVO>) BeanUtils.convert(permissionList, PermissionVO.class);
+            role.setPermissions(permissions);
+            role.setMenus(menus);
+        }
         return role;
     }
 
@@ -74,6 +82,9 @@ public class RoleBizImpl implements RoleBiz {
     @Override
     public List<Integer> getLevel() {
         List<Role> roles = userRoleService.findByUserId(securityFactory.getUserId());
+        if (roles==null){
+            return null;
+        }
         List<Integer> levels = roles.stream().map(Role::getLevel).collect(Collectors.toList());
         return levels;
     }
@@ -88,6 +99,15 @@ public class RoleBizImpl implements RoleBiz {
         Role entity = new Role();
         BeanUtils.copyProperties(req, entity);
         roleService.save(entity);
+
+        if (req.getDepts()!=null){
+            for (Long deptId:req.getDepts()){
+                RoleDepartment roleDepartment = new RoleDepartment();
+                roleDepartment.setRoleId(entity.getId());
+                roleDepartment.setDepartmentId(deptId);
+                roleDepartmentService.save(roleDepartment);
+            }
+        }
     }
 
     @Override

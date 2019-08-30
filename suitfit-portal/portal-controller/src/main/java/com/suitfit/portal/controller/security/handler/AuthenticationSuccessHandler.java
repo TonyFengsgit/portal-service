@@ -1,7 +1,7 @@
 package com.suitfit.portal.controller.security.handler;
 
 import com.suitfit.framework.utils.redis.RedisService;
-import com.suitfit.framework.utils.servlet.ResponseUtils;
+import com.suitfit.portal.controller.utils.ResponseUtils;
 import com.suitfit.portal.model.pojo.properties.TokenProperties;
 import com.suitfit.portal.model.pojo.utils.JwtTokenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +38,11 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         String token = JwtTokenUtils.generateToken(userDetails.getUsername());
         redisTemplate.set(token, "true", tokenProperties.getTokenExpireTime(), TimeUnit.DAYS);
         remove(userDetails.getUsername());
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         ResponseUtils.out(response, token);
     }
 
