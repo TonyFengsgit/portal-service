@@ -93,7 +93,7 @@ public class RoleBizImpl implements RoleBiz {
     public void create(RoleReq req) {
         req.setId(null);
         if (roleService.findByName(req.getName()) != null) {
-            throw new BaseException("角色已经存在");
+            throw new BaseException(ResponseCode.ROLE_EXISTS);
         }
 
         Role entity = new Role();
@@ -116,18 +116,31 @@ public class RoleBizImpl implements RoleBiz {
         Role old2 = roleService.findByName(req.getName());
 
         if (old2 != null && !old2.getId().equals(old1.getId())) {
-            throw new BaseException("角色已经存在");
+            throw new BaseException(ResponseCode.ROLE_EXISTS);
         }
         Role entity = new Role();
         BeanUtils.copyProperties(req, entity);
         entity.setId(old1.getId());
+
         roleService.updateEntity(entity);
+
+        if (2==req.getDataType()){
+            roleDepartmentService.deleteByRoleId(req.getId());
+            if (req.getDepts()!=null){
+                for (Long deptId:req.getDepts()){
+                    RoleDepartment roleDepartment = new RoleDepartment();
+                    roleDepartment.setRoleId(entity.getId());
+                    roleDepartment.setDepartmentId(deptId);
+                    roleDepartmentService.save(roleDepartment);
+                }
+            }
+        }
     }
 
     @Override
     public void updateMenu(RoleReq req) {
+        roleMenuService.deleteByRoleId(req.getId());
         if (!ObjectUtils.isEmpty(req.getMenus())) {
-            roleMenuService.deleteByRoleId(req.getId());
             for (Long menuId : req.getMenus()) {
                 RoleMenu roleMenu = new RoleMenu();
                 roleMenu.setMenuId(menuId);
@@ -139,8 +152,8 @@ public class RoleBizImpl implements RoleBiz {
 
     @Override
     public void updatePermission(RoleReq req) {
-        if (!ObjectUtils.isEmpty(req.getMenus())) {
-            rolePermissionService.deleteByRoleId(req.getId());
+        rolePermissionService.deleteByRoleId(req.getId());
+        if (!ObjectUtils.isEmpty(req.getPermissions())) {
             for (Long permissionId : req.getPermissions()) {
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setPermissionId(permissionId);

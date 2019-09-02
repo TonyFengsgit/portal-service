@@ -7,6 +7,7 @@ import com.suitfit.portal.controller.security.filter.JWTAuthenticationFilter;
 import com.suitfit.portal.controller.security.handler.AuthenticationFailHandler;
 import com.suitfit.portal.controller.security.handler.AuthenticationSuccessHandler;
 import com.suitfit.portal.controller.security.handler.RestAccessDeniedHandler;
+import com.suitfit.portal.model.pojo.properties.AppConfigProperties;
 import com.suitfit.portal.model.pojo.properties.CaptchaProperties;
 import com.suitfit.portal.model.pojo.properties.IgnoredUrlsProperties;
 import com.suitfit.portal.model.pojo.properties.TokenProperties;

@@ -50,7 +50,6 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            chain.doFilter(request, response);
         } catch (BaseException e) {
             log.error("jwt token error", e);
             ResponseUtils.out(response, e);
@@ -58,7 +57,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             log.error("jwt token error", e);
             ResponseUtils.out(response, new BaseException(ResponseCode.SYSTEM_ERROR));
         }
-
+        chain.doFilter(request, response);
     }
 
     /**
@@ -82,7 +81,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             AuthUser authUser = new AuthUser(auth);
             return new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
         } else {
-            throw new BaseException(ResponseCode.SYSTEM_ERROR);
+            throw new BaseException(ResponseCode.TOKEN_EXPIRE);
         }
     }
 }

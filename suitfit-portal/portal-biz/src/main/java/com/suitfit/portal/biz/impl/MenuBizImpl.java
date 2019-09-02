@@ -11,6 +11,7 @@ import com.suitfit.portal.base.service.utils.SecurityFactory;
 import com.suitfit.portal.biz.MenuBiz;
 import com.suitfit.portal.model.entity.Menu;
 import com.suitfit.portal.model.entity.Role;
+import com.suitfit.portal.model.pojo.code.ResponseCode;
 import com.suitfit.portal.model.pojo.criteria.QueryCriteria;
 import com.suitfit.portal.model.pojo.dto.MenuDTO;
 import com.suitfit.portal.model.pojo.vo.req.MenuReq;
@@ -88,7 +89,7 @@ public class MenuBizImpl implements MenuBiz {
         }
         if (req.getFrame() != null && req.getFrame()) {
             if (!(req.getPath().toLowerCase().startsWith("http://") || req.getPath().toLowerCase().startsWith("https://"))) {
-                throw new BaseException("外链必须以http://或者https://开头");
+                throw new BaseException(ResponseCode.HTTP_URL_ERROR);
             }
         }
         Menu entity = new Menu();
@@ -99,17 +100,17 @@ public class MenuBizImpl implements MenuBiz {
     @Override
     public void update(MenuReq req) {
         if (req.getId().equals(req.getParentId())) {
-            throw new BaseException("上级不能为自己");
+            throw new BaseException(ResponseCode.PARENT_NOT_SELF_ERROR);
         }
         if (req.getFrame() != null && req.getFrame()) {
             if (!(req.getPath().toLowerCase().startsWith("http://") || req.getPath().toLowerCase().startsWith("https://"))) {
-                throw new BaseException("外链必须以http://或者https://开头");
+                throw new BaseException(ResponseCode.HTTP_URL_ERROR);
             }
         }
         Menu m1 = menuService.findById(req.getId());
         Menu m2 = menuService.findByName(req.getName());
         if (m2 != null && !m2.getId().equals(m1.getId())) {
-            throw new BaseException("菜单已存在");
+            throw new BaseException(ResponseCode.MENU_EXISTS_ERROR);
         }
         Menu entity = new Menu();
         BeanUtils.copyProperties(req, entity);

@@ -8,6 +8,7 @@ import com.suitfit.portal.base.dao.utils.PageUtils;
 import com.suitfit.portal.base.service.RecommendProductService;
 import com.suitfit.portal.biz.RecommendBiz;
 import com.suitfit.portal.model.entity.RecommendProduct;
+import com.suitfit.portal.model.pojo.code.ResponseCode;
 import com.suitfit.portal.model.pojo.criteria.RecommendQueryCriteria;
 import com.suitfit.portal.model.pojo.vo.common.PageVO;
 import com.suitfit.portal.model.pojo.vo.req.RecommendReq;
@@ -24,7 +25,7 @@ public class RecommendBizImpl implements RecommendBiz {
     @Override
     public void create(RecommendReq req) {
         if (service.findByProductCode(req.getProductCode())!=null){
-            throw new BaseException("");
+            throw new BaseException(ResponseCode.PRODUCT_CODE_EXISTS);
         }
 
         RecommendProduct entity = new RecommendProduct();
@@ -34,9 +35,6 @@ public class RecommendBizImpl implements RecommendBiz {
 
     @Override
     public void update(RecommendReq req) {
-        if (service.findByProductCode(req.getProductCode())!=null){
-            throw new BaseException("");
-        }
         RecommendProduct entity = new RecommendProduct();
         BeanUtils.copyProperties(req, entity);
         service.updateEntity(entity);

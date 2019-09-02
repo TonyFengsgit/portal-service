@@ -27,12 +27,12 @@ public class RecommendVO {
      */
     private BigDecimal interestRate;
 
-
-    private Integer productType;
     /**
      * logo链接
      */
     private String logoUrl;
+
+    private Integer state;
 
     /**
      * 推荐权重
@@ -44,10 +44,6 @@ public class RecommendVO {
     private Integer showFlag;
 
     private String description;
-    /**
-     * 需求量
-     */
-    private Integer requireAmount;
 
     private String appCode;
 }

@@ -95,7 +95,7 @@ public class PermissionBizImpl implements PermissionBiz {
     public void update(PermissionReq req) {
         Permission p1 = permissionService.findById(req.getId());
         if (req.getId().equals(req.getParentId())) {
-            throw new BaseException("上级不能为自己");
+            throw new BaseException(ResponseCode.PARENT_NOT_SELF_ERROR);
         }
 
         Permission p2 = permissionService.findByName(req.getName());

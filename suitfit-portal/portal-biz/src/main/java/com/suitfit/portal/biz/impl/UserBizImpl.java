@@ -59,9 +59,6 @@ public class UserBizImpl implements UserBiz {
     @Autowired
     private SecurityFactory securityFactory;
 
-    @Autowired
-    private RedisService redisTemplate;
-
     @Override
     public PageVO<UserVO> users(UserReq req, Page initPage) {
         PageVO<UserVO> pageVO = new PageVO<>();
@@ -121,12 +118,12 @@ public class UserBizImpl implements UserBiz {
             throw new BaseException(ResponseCode.USER_NAME_EXISTS);
         }
 
-        if (userService.findByEmail(query.getEmail()) != null) {
-            throw new BaseException(ResponseCode.EMAIL_EXISTS);
-        }
-        if (userService.findByPhone(query.getPhone()) != null) {
-            throw new BaseException(ResponseCode.MOBILE_EXISTS);
-        }
+//        if (userService.findByEmail(query.getEmail()) != null) {
+//            throw new BaseException(ResponseCode.EMAIL_EXISTS);
+//        }
+//        if (userService.findByPhone(query.getPhone()) != null) {
+//            throw new BaseException(ResponseCode.MOBILE_EXISTS);
+//        }
         User entity = new User();
         BeanUtils.copyProperties(query, entity);
         String encryptPass = new BCryptPasswordEncoder().encode("123456");
@@ -156,12 +153,12 @@ public class UserBizImpl implements UserBiz {
             throw new BaseException(ResponseCode.USER_NAME_EXISTS);
         }
 
-        if (userService.findByEmail(req.getEmail()) != null) {
-            throw new BaseException(ResponseCode.EMAIL_EXISTS);
-        }
-        if (userService.findByPhone(req.getPhone()) != null) {
-            throw new BaseException(ResponseCode.MOBILE_EXISTS);
-        }
+//        if (userService.findByEmail(req.getEmail()) != null) {
+//            throw new BaseException(ResponseCode.EMAIL_EXISTS);
+//        }
+//        if (userService.findByPhone(req.getPhone()) != null) {
+//            throw new BaseException(ResponseCode.MOBILE_EXISTS);
+//        }
 
         User entity = new User();
         BeanUtils.copyProperties(req, entity);
@@ -184,7 +181,7 @@ public class UserBizImpl implements UserBiz {
         Integer currentLevel = Collections.min(userRoleService.findByUserId(securityFactory.getUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
         Integer optLevel = Collections.min(userRoleService.findByUserId(id).stream().map(Role::getLevel).collect(Collectors.toList()));
         if (currentLevel > optLevel) {
-            throw new BaseException("角色权限不足");
+            throw new BaseException(ResponseCode.PERMISSION_LEVEL_ERROR);
         }
         userService.delete(id);
         userRoleService.removeByUserId(id);
@@ -194,11 +191,11 @@ public class UserBizImpl implements UserBiz {
     public void updatePass(UserPassReq req) {
         AuthUser currentUser = securityFactory.getCurrentUser();
         if (!new BCryptPasswordEncoder().matches(req.getOldPass(), currentUser.getPassword())) {
-            throw new BaseException("旧密码不正确");
+            throw new BaseException(ResponseCode.OLD_PASSWORD_ERROR);
         }
         String newEncryptPass = new BCryptPasswordEncoder().encode(req.getNewPass());
         if (StringUtils.equals(newEncryptPass, currentUser.getPassword())) {
-            throw new BaseException("新密码不能与旧密码相同");
+            throw new BaseException(ResponseCode.PASSWORD_SAME_ERROR);
         }
         User entity = new User();
         entity.setId(currentUser.getId());
@@ -210,7 +207,7 @@ public class UserBizImpl implements UserBiz {
         Integer currentLevel = Collections.min(userRoleService.findByUserId(securityFactory.getUserId()).stream().map(Role::getLevel).collect(Collectors.toList()));
         Integer optLevel = Collections.min(roleService.findByRoleIds(user.getRoles()).stream().map(Role::getLevel).collect(Collectors.toList()));
         if (currentLevel > optLevel) {
-            throw new BaseException("角色权限不足");
+            throw new BaseException(ResponseCode.PERMISSION_LEVEL_ERROR);
         }
     }
 }

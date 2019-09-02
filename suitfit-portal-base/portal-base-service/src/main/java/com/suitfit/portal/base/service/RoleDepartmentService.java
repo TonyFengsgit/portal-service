@@ -21,4 +21,5 @@ public interface RoleDepartmentService extends BaseService<RoleDepartment> {
     List<Department> findByRoleId(Long id);
 
     void deleteByRoleId(Long id);
+
 }

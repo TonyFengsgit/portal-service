@@ -6,6 +6,7 @@ import com.suitfit.portal.base.service.DepartmentService;
 import com.suitfit.portal.base.service.utils.DataScope;
 import com.suitfit.portal.biz.DepartmentBiz;
 import com.suitfit.portal.model.entity.Department;
+import com.suitfit.portal.model.pojo.code.ResponseCode;
 import com.suitfit.portal.model.pojo.criteria.DeptQueryCriteria;
 import com.suitfit.portal.model.pojo.vo.req.DeptReq;
 import com.suitfit.portal.model.pojo.vo.resp.DeptVO;
@@ -81,7 +82,7 @@ public class DepartmentBizImpl implements DepartmentBiz {
     @Override
     public void update(DeptReq req) {
         if (req.getParentId().equals(req.getId())) {
-            throw new BaseException("上级不能为自己");
+            throw new BaseException(ResponseCode.PARENT_NOT_SELF_ERROR);
         }
         Department dept = departmentService.findById(req.getId());
         if (dept != null) {
