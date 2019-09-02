@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
-/**
- * @author Exrickx
- */
 @Slf4j
 @RestController
 @RequestMapping("auth")

@@ -1,4 +1,4 @@
-package com.suitfit.portal.model.pojo.utils;
+package com.suitfit.portal.controller.security.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtTokenUtils {
-    private static final String secret = "SECRET";
-    private static final long expire = 60 * 60 * 24 * 1000;
 
-    private static String generateToken(Map<String, Object> claims) {
+    private static final String secret = "SECRET";
+
+    private static String generateToken(Map<String, Object> claims, long expire) {
         Date expireDate = new Date(System.currentTimeMillis() + expire);
         return Jwts.builder().setClaims(claims).setExpiration(expireDate).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
@@ -27,11 +27,11 @@ public class JwtTokenUtils {
         return claims;
     }
 
-    public static String generateToken(String username) {
+    public static String generateToken(String username,long expire) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", username);
         claims.put("created", new Date());
-        return generateToken(claims);
+        return generateToken(claims, expire);
     }
 
     public static String getUsernameFromToken(String token) {
@@ -55,12 +55,12 @@ public class JwtTokenUtils {
         }
     }
 
-    public static String refreshToken(String token) {
+    public static String refreshToken(String token, long expire) {
         String refreshToken;
         try {
             Claims claims = getClaimsFromToken(token);
             claims.put("created", new Date());
-            refreshToken = generateToken(claims);
+            refreshToken = generateToken(claims, expire);
         } catch (Exception e) {
             refreshToken = null;
         }
