@@ -2,10 +2,10 @@ package com.suitfit.portal.controller.web.rest;
 
 import com.suitfit.framework.exception.BaseException;
 import com.suitfit.framework.mvc.ResponseMessage;
-import com.suitfit.portal.base.dao.utils.PageUtils;
+import com.suitfit.framework.utils.page.PageUtils;
+import com.suitfit.framework.utils.page.PageVO;
 import com.suitfit.portal.biz.UserBiz;
 import com.suitfit.portal.model.pojo.code.ResponseCode;
-import com.suitfit.portal.model.pojo.vo.common.PageVO;
 import com.suitfit.portal.model.pojo.vo.req.UserPassReq;
 import com.suitfit.portal.model.pojo.vo.req.UserReq;
 import com.suitfit.portal.model.pojo.vo.resp.UserVO;

@@ -6,6 +6,7 @@ import com.suitfit.portal.controller.security.filter.ImageValidateFilter;
 import com.suitfit.portal.controller.security.filter.JWTAuthenticationFilter;
 import com.suitfit.portal.controller.security.handler.AuthenticationFailHandler;
 import com.suitfit.portal.controller.security.handler.AuthenticationSuccessHandler;
+import com.suitfit.portal.controller.security.handler.DefaultAuthenticationEntryPoint;
 import com.suitfit.portal.controller.security.handler.RestAccessDeniedHandler;
 import com.suitfit.portal.model.pojo.properties.AppConfigProperties;
 import com.suitfit.portal.model.pojo.properties.CaptchaProperties;
@@ -100,7 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(patterns).permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
-                .loginPage("/auth/toLogin").permitAll()
+                .loginPage("/auth/needLogin").permitAll()
                 .loginProcessingUrl("/login").permitAll()
                 .successHandler(successHandler)
                 .failureHandler(failHandler)
@@ -108,7 +109,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling().accessDeniedHandler(new RestAccessDeniedHandler())// PS:因为framework中已经对AccessDeniedException异常做了处理，此处不生效
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new ImageValidateFilter(captchaProperties, redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager, redisTemplate, securityFactory));
+                .addFilter(new JWTAuthenticationFilter(authenticationManager,new DefaultAuthenticationEntryPoint(), redisTemplate, securityFactory));
 
     }
 }

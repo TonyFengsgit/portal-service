@@ -2,8 +2,8 @@ package com.suitfit.portal.controller.security.handler;
 
 import com.suitfit.framework.utils.redis.RedisService;
 import com.suitfit.framework.utils.servlet.ResponseUtils;
+import com.suitfit.portal.controller.security.utils.JwtTokenUtils;
 import com.suitfit.portal.model.pojo.properties.TokenProperties;
-import com.suitfit.portal.model.pojo.utils.JwtTokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,7 +35,8 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = JwtTokenUtils.generateToken(userDetails.getUsername());
+        long timeOut = TimeUnit.DAYS.toMillis(tokenProperties.getTokenExpireTime());
+        String token = JwtTokenUtils.generateToken(userDetails.getUsername(), timeOut);
         redisTemplate.set(token, "true", tokenProperties.getTokenExpireTime(), TimeUnit.DAYS);
         remove(userDetails.getUsername());
 //        response.setHeader("Access-Control-Allow-Origin", "*");

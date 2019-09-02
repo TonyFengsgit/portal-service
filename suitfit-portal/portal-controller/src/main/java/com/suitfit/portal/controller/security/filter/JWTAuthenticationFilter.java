@@ -5,15 +5,20 @@ import com.suitfit.framework.utils.StringUtils;
 import com.suitfit.framework.utils.redis.RedisService;
 import com.suitfit.framework.utils.servlet.ResponseUtils;
 import com.suitfit.portal.base.service.utils.SecurityFactory;
+import com.suitfit.portal.controller.security.utils.JwtTokenUtils;
 import com.suitfit.portal.model.pojo.auth.AuthUser;
 import com.suitfit.portal.model.pojo.code.ResponseCode;
 import com.suitfit.portal.model.pojo.consts.SecurityConstant;
 import com.suitfit.portal.model.pojo.dto.AuthModel;
-import com.suitfit.portal.model.pojo.utils.JwtTokenUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -29,13 +34,12 @@ import java.io.IOException;
 @Slf4j
 public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
-
     private RedisService redisTemplate;
 
     private SecurityFactory securityFactory;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, RedisService redisTemplate, SecurityFactory securityFactory) {
-        super(authenticationManager);
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,AuthenticationEntryPoint authenticationEntryPoint , RedisService redisTemplate, SecurityFactory securityFactory) {
+        super(authenticationManager, authenticationEntryPoint);
         this.redisTemplate = redisTemplate;
         this.securityFactory = securityFactory;
     }
@@ -47,12 +51,15 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             token = request.getParameter(SecurityConstant.HEADER);
         }
         try {
+            if (StringUtils.isNullOrEmpty(token)){
+                throw new AuthenticationCredentialsNotFoundException(ResponseCode.TOKEN_EXPIRE.getMessage());
+            }
             UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (BaseException e) {
+        } catch (AuthenticationException e) {
             log.error("jwt token error", e);
-            ResponseUtils.out(response, e);
+            this.getAuthenticationEntryPoint().commence(request, response, e);
         } catch (Exception e) {
             log.error("jwt token error", e);
             ResponseUtils.out(response, new BaseException(ResponseCode.SYSTEM_ERROR));
@@ -70,18 +77,18 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(String token) throws Exception {
         Object v = redisTemplate.get(token);
         if (StringUtils.isNullOrEmpty(v) || JwtTokenUtils.isTokenExpired(token)) {
-            throw new BaseException(ResponseCode.TOKEN_EXPIRE);
+            throw new CredentialsExpiredException(ResponseCode.TOKEN_EXPIRE.getMessage());
         }
         String username = JwtTokenUtils.getUsernameFromToken(token);
         if (StringUtils.isNotBlank(username)) {
             AuthModel auth = this.securityFactory.findByUsername(username);
             if (auth == null) {
-                throw new BaseException(ResponseCode.USER_DONT_EXISTS);
+                throw new UsernameNotFoundException(ResponseCode.USER_DONT_EXISTS.getMessage());
             }
             AuthUser authUser = new AuthUser(auth);
             return new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
         } else {
-            throw new BaseException(ResponseCode.TOKEN_EXPIRE);
+            throw new CredentialsExpiredException(ResponseCode.TOKEN_EXPIRE.getMessage());
         }
     }
 }
