@@ -22,6 +22,16 @@ public class RecommendVO {
      * 最大金额
      */
     private BigDecimal maxPrincipal;
+
+    /**
+     * 最小可借时长
+     */
+    private Integer minPeriods;
+    /**
+     * 最大可借时长
+     */
+    private Integer maxPeriods;
+
     /**
      * 日利率
      */
@@ -31,6 +41,11 @@ public class RecommendVO {
      * logo链接
      */
     private String logoUrl;
+
+    /**
+     * 产品链接
+     */
+    private String productUrl;
 
     private Integer state;
 
