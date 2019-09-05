@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 @DBSource("portal")
 @Mapper
 public interface AppChannelMapper extends BaseMapper<AppChannel> {
+
+
 }
