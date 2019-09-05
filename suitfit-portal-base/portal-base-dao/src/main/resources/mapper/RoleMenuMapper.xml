@@ -6,5 +6,6 @@
         <foreach collection="list" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
+
     </select>
 </mapper>

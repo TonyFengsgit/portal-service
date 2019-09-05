@@ -37,4 +37,11 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://192.168.1.111:3306/suitfit_portal?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
           type: com.alibaba.druid.pool.DruidDataSource
+        all:
+            username: root
+            password: suitfit12378900
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://192.168.1.111:3306/?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+            type: com.alibaba.druid.pool.DruidDataSource
+
 

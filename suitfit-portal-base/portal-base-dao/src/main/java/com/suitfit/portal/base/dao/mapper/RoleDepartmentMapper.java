@@ -17,5 +17,7 @@ import java.util.List;
 @DBSource("portal")
 @Mapper
 public interface RoleDepartmentMapper extends BaseMapper<RoleDepartment> {
+
     List<Department> findByRoleId(Long roleId);
+
 }

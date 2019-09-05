@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class AppChannelServiceImpl extends BaseServiceImpl<AppChannelMapper, AppChannel> implements AppChannelService {
     @Override
     public AppChannel findById(Long id) {
+
         return getById(id);
     }
 
