@@ -12,7 +12,7 @@ import com.suitfit.portal.model.pojo.vo.req.ChanTimeeq;
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -39,22 +39,26 @@ public class allChannelRlowServiceImpl extends BaseServiceImpl<ChannelFlowMapper
 
         System.out.println("进入allChannelRlowServiceImpl层");
         List<ChannelFlow> CpvuvbyChTi = this.baseMapper.findCpvuvbyChTi(chanTimeeq);
-        List<ChannelFlow> payNumbyChTi = this.baseMapper.findpayNumbyChTi(chanTimeeq);
         List<ChannelFlow> UserNumbyChTi = this.baseMapper.findUserNumbyChTi(chanTimeeq);
+        List<ChannelFlow> payNumbyChTi = this.baseMapper.findpayNumbyChTi(chanTimeeq);
 
-        return mergeFlow(CpvuvbyChTi,payNumbyChTi,UserNumbyChTi);
+        return mergeFlow(CpvuvbyChTi,UserNumbyChTi,payNumbyChTi);
     }
 
     //使用此方法必须注意集合顺序，将集合拼接在一起
     @Override
     public List<ChannelFlow> mergeFlow(List<ChannelFlow> cpvuv, List<ChannelFlow> userNum, List<ChannelFlow> payUserNum) {
+        List<ChannelFlow> flowList =new ArrayList<ChannelFlow>();
         //遍历，取出渠道
         for (ChannelFlow channelFlow : cpvuv) {
-            String channal = channelFlow.getChannal();
+            String channal1 = channelFlow.getChannel();
             //遍历第二个集合
             for (ChannelFlow flow : userNum) {
+
+                String channal2 = flow.getChannel();
                 //比对渠道,如果相同的渠道
-                if (StringUtils.equals(channal,flow.getChannal())) {
+                if (StringUtils.equals(channal1,channal2)) {
+                    System.out.println("渠道是相同的");
                     //取出对应的注册人数值
                     Long userNumT = flow.getUserNumT();
                     //存入真注册人数数
@@ -67,9 +71,9 @@ public class allChannelRlowServiceImpl extends BaseServiceImpl<ChannelFlowMapper
 
         }
         for (ChannelFlow channelFlow : cpvuv) {
-            String channal = channelFlow.getChannal();
+            String channal = channelFlow.getChannel();
             for (ChannelFlow paynum : payUserNum) {
-                if (StringUtils.equals(channal,paynum.getChannal())){
+                if (StringUtils.equals(channal,paynum.getChannel())){
                     //设置放款人数
                     channelFlow.setUserPayNum(paynum.getUserPayNum());
                     //设置放款成功人数
@@ -84,7 +88,7 @@ public class allChannelRlowServiceImpl extends BaseServiceImpl<ChannelFlowMapper
         List<ChannelFlow> cpvuvList = (List<ChannelFlow>) BeanUtils.convert(cpvuv, ChannelFlow.class);
         //打印测试
         for (ChannelFlow channelFlow : cpvuvList) {
-            System.out.println("测试：查询渠道"+channelFlow.getChannal());
+            System.out.println("测试：查询渠道"+channelFlow.getChannel());
             System.out.println("测试：查询总额"+channelFlow.getPayNum());
         }
         return cpvuvList;

@@ -4,10 +4,12 @@
 
     <!--1.查询并封装各个渠道：渠道、PV、UV 从user_page_log中-->
     <select id="allChannelCpvuv" resultType="com.suitfit.portal.model.entity.ChannelFlow">
-        SELECT upl.source channel,COUNT(upl.id) pv ,COUNT(DISTINCT upl.hash) uv FROM `suitfit_user`.`user_page_log` upl GROUP BY upl.source;
+        SELECT upl.source channel,COUNT(upl.id) pv ,COUNT(DISTINCT upl.hash) uv FROM `suitfit_user`.`user_page_log` upl
+        GROUP BY upl.source;
+
     </select>
 
-   <!-- 2.查询各个渠道的注册人数-->
+    <!-- 2.查询各个渠道的注册人数-->
     <select id="allChannelUserNum" resultType="com.suitfit.portal.model.entity.ChannelFlow">
         select a.source channel ,COUNT(a.account_id) userNumT from `suitfit_user`.`user_account` a GROUP BY a.source;
     </select>
@@ -18,68 +20,83 @@
         SELECT
         a.source channel,
         (SELECT COUNT(b.id) FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id) AS userPayNum,
-        (SELECT COUNT(*)  userPayNumT FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id AND pay_type=1) As userPayNumT,
-        (SELECT SUM(real_pay_amount) PayNum FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id) AS PayNum
+        (SELECT COUNT(*) userPayNumT FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id AND pay_type=1)
+        As userPayNumT,
+        (SELECT SUM(real_pay_amount) PayNum FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id) AS
+        PayNum
         FROM suitfit_user.user_account a
         GROUP BY a.source
 
     </select>
 
     <!--4.根据条件渠道、时间查询：渠道、PV、UV -->
-    <select id="findCpvuvbyChTi" resultType="com.suitfit.portal.model.entity.ChannelFlow" parameterType="com.suitfit.portal.model.pojo.vo.req.ChanTimeeq">
+    <select id="findCpvuvbyChTi" resultType="com.suitfit.portal.model.entity.ChannelFlow"
+            parameterType="com.suitfit.portal.model.pojo.vo.req.ChanTimeeq">
 
-        SELECT upl.source channel,COUNT(upl.id) pv ,COUNT(DISTINCT upl.hash) uv FROM `suitfit_user`.`user_page_log` upl where 1=1
-        <if test="channel != null and channel != '' and time == null and time =='' ">
-           and upl.source like #{Channel};
-        </if>
+        SELECT upl.source channel,COUNT(upl.id) pv ,COUNT(DISTINCT upl.hash) uv FROM `suitfit_user`.`user_page_log` upl
+        <where>
+            <if test="channel != 'null' and channel != '' and (time == 'null' or time =='') ">
+                upl.source like concat('%',#{channel},'%')
+            </if>
 
-        <if test="time !=null and time !='' and channel == null and channel == ''">
-            and upl.ctime like #{time}
-        </if>
+            <if test="time !='null' and time !='' and (channel == 'null' or channel == '')">
+                upl.ctime like concat('%',#{time},'%')
+            </if>
 
-        <if test="channel != null and channel != '' and time != null and time !='' ">
-            and upl.source like #{Channel} and upl.ctime like #{time}
-        </if>
+            <if test="channel != 'null' and channel != '' and time != 'null' and time !='' ">
+                upl.source like concat('%',#{channel},'%')
+            </if>
+        </where>
 
     </select>
 
     <!--5.根据条件渠道、时间查询：渠道的注册人数 -->
-    <select id="findUserNumbyChTi" resultType="com.suitfit.portal.model.entity.ChannelFlow" parameterType="com.suitfit.portal.model.pojo.vo.req.ChanTimeeq">
+    <select id="findUserNumbyChTi" resultType="com.suitfit.portal.model.entity.ChannelFlow"
+            parameterType="com.suitfit.portal.model.pojo.vo.req.ChanTimeeq">
 
-        select a.source ,COUNT(a.account_id) userNumT from `suitfit_user`.`user_account` a where 1=1
-        <if test="channel != null and channel != '' and time == null and time =='' ">
-            and upl.source like #{Channel};
-        </if>
+        select a.source channel ,COUNT(*) userNumT from `suitfit_user`.`user_account` a
+        <where>
+            <if test="channel != 'null' and channel != '' and (time == 'null' or time =='') ">
+                a.source like concat('%',#{channel},'%')
+            </if>
 
-        <if test="time !=null and time !='' and channel == null and channel == ''">
-            and upl.ctime like #{time}
-        </if>
+            <if test="time !='null' and time !='' and (channel == 'null' or channel == '')">
+                a.ctime like concat('%',#{time},'%')
+            </if>
 
-        <if test="channel != null and channel != '' and time != null and time !='' ">
-            and upl.source like #{Channel} and upl.ctime like #{time}
-        </if>
+            <if test="channel != 'null' and channel != '' and time != 'null' and time !='' ">
+                a.source like concat('%',#{channel},'%')
+            </if>
+        </where>
+
 
     </select>
 
     <!--6.根据条件渠道、时间查询：渠道支付人数、支付成功人数、总金额 -->
-    <select id="findpayNumbyChTi" resultType="com.suitfit.portal.model.entity.ChannelFlow" parameterType="com.suitfit.portal.model.pojo.vo.req.ChanTimeeq">
+    <select id="findpayNumbyChTi" resultType="com.suitfit.portal.model.entity.ChannelFlow"
+            parameterType="com.suitfit.portal.model.pojo.vo.req.ChanTimeeq">
 
-        SELECT a.source,
+        SELECT a.source channel,
         (SELECT COUNT(*) FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id) AS userPayNum,
-        (SELECT COUNT(*)  userPayNumT FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id AND pay_type=1) As userPayNumT,
-        (SELECT SUM(real_pay_amount) PayNum FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id) AS PayNum
-        FROM suitfit_user.user_account a WHERE 1=1
-        <if test="channel != null and channel != '' and time == null and time =='' ">
-            and upl.source like #{Channel};
-        </if>
+        (SELECT COUNT(*) userPayNumT FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id AND pay_type=1)
+        As userPayNumT,
+        (SELECT SUM(real_pay_amount) PayNum FROM suitfit_order.`withhold_log` b WHERE a.account_id=b.account_id) AS
+        PayNum
+        FROM suitfit_user.user_account a
+        <where>
+            <if test="channel != 'null' and channel != '' and (time == 'null' or time =='') ">
+                a.source like concat('%',#{channel},'%')
+            </if>
 
-        <if test="time !=null and time !='' and channel == null and channel == ''">
-            and upl.ctime like #{time}
-        </if>
+            <if test="time !='null' and time !='' and (channel == 'null' or channel == '')">
+                a.ctime like concat('%',#{time},'%')
+            </if>
 
-        <if test="channel != null and channel != '' and time != null and time !='' ">
-            and upl.source like #{Channel} and upl.ctime like #{time}
-        </if>
+            <if test="channel != 'null' and channel != '' and time != 'null' and time !='' ">
+                a.source like concat('%',#{channel},'%')
+            </if>
+        </where>
+        GROUP BY a.source
 
     </select>
 

@@ -30,15 +30,12 @@ public class allChannelRlowBizImpl implements allChannelFlowBiz {
     }
 
 
-
     //条件查询
     @Override
     public List<ChannelFlowVO> getFlowByChTi(ChanTimeeq chanTime){
-
         List<ChannelFlow> flows = rlowService.getallChannelFlow(chanTime);
         List<ChannelFlowVO> flowVOSlist=(List<ChannelFlowVO>) BeanUtils.convert(flows,ChannelFlowVO.class);
         return  flowVOSlist;
-
 
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ChannelFlowVO {
 
-    private String channal;
+    private String channel;
     private Long  pv;
     private Long  uv;
 

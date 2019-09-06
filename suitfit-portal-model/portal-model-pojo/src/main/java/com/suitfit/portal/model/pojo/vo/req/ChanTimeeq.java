@@ -9,8 +9,10 @@ import java.util.Date;
 public class ChanTimeeq {
 
     //查询封装实体类
+    //渠道
     private String channel;
 
+    //时间
     private String  time;
 
 }
