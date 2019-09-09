@@ -6,4 +6,4 @@ spring:
 server:
   servlet:
     context-path: /api/portal
-  port: 8097
+  port: 8098
