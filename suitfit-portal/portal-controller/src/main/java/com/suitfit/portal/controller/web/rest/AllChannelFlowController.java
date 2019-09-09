@@ -1,6 +1,7 @@
 package com.suitfit.portal.controller.web.rest;
 
 import com.suitfit.framework.mvc.ResponseMessage;
+import com.suitfit.framework.utils.StringUtils;
 import com.suitfit.framework.utils.page.PageVO;
 import com.suitfit.portal.biz.allChannelFlowBiz;
 import com.suitfit.portal.model.pojo.vo.req.ChannelTimeReq;
@@ -28,7 +29,7 @@ public class AllChannelFlowController {
         ChannelTimeReq channelTime = param.channelTime;
         PageVO page = param.page;
         System.out.println("传入参数："+channelTime.getChannel()+"---"+channelTime.getTime());
-        if ((channelTime.getChannel()==null) && (channelTime.getTime()==null)){
+        if ((StringUtils.isEmpty(channelTime.getChannel())) && (StringUtils.isEmpty(channelTime.getTime()))){
             System.out.println("进入默认查询方法");
             return getChannelFlow(page);
         }else{
@@ -44,7 +45,7 @@ public class AllChannelFlowController {
 
 
     public ResponseMessage getChannelFlowByChTi(ChannelTimeReq chanTime,PageVO page){
-        List<ChannelFlowVO> allChannelFlow = this.allChannelFlow.getChannelFlowByChTi(chanTime);
+        List<ChannelFlowVO> allChannelFlow = this.allChannelFlow.getChannelFlowByChTi(chanTime,page);
         return ResponseMessage.ok(allChannelFlow);
     }
 
